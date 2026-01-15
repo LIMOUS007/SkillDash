@@ -9,7 +9,7 @@ def normalize(ans, answer_type):
     elif answer_type == "yesno":
         mapping = {"yes": "yes", "y": "yes", "true": "yes",
                "no": "no", "n": "no", "false": "no"}
-    return mapping.get(str(ans).lower(), str(ans).lower())
+        return mapping.get(str(ans).lower(), str(ans).lower())
     
 
 def log_attempt(user_id, task, user_answer, time_taken):

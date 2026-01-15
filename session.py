@@ -3,9 +3,12 @@ from engine.task_picker import pick_task
 from engine.difficulty import update_difficulty
 from engine.logger import log_attempt
 def normalize(ans, answer_type):
-    if answer_type in ("boolean", "yesno"):
+    if answer_type == "boolean":
         return str(ans).strip().lower()
-    return str(ans).strip()
+    elif answer_type == "yesno":
+        mapping = {"yes": "yes", "y": "yes", "true": "yes",
+               "no": "no", "n": "no", "false": "no"}
+        return mapping.get(str(ans).lower(), str(ans).lower())
 
 def run_session(user_id, rounds=20):
     user_state = {
@@ -34,4 +37,4 @@ def run_session(user_id, rounds=20):
         print("New difficulty:", user_state["difficulty"])
         
 if __name__ == "__main__":
-    run_session(user_id="test_user", rounds=20)
+    run_session(user_id="test_user", rounds=10)
