@@ -4,14 +4,26 @@ from datetime import datetime
 import os
 
 def normalize(ans, answer_type):
+    s = str(ans).strip().lower()
+    if s == "":
+        return None
     if answer_type == "boolean":
-        return str(ans).strip().lower()
-    elif answer_type == "yesno":
-        mapping = {"yes": "yes", "y": "yes", "true": "yes",
-               "no": "no", "n": "no", "false": "no"}
-        return mapping.get(str(ans).lower(), str(ans).lower())
-    else:  
-        return str(ans).strip()
+        mapping = {
+            "true": "true", "t": "true", "1": "true",
+            "false": "false", "f": "false", "0": "false"
+        }
+        return mapping.get(s, s)
+    if answer_type == "yesno":
+        mapping = {"yes": "yes", "y": "yes", "true": "yes", "t": "yes", "1": "yes",
+            "no": "no", "n": "no", "false": "no", "f": "no", "0": "no"
+        }
+        return mapping.get(s, s)
+    if answer_type == "integer":
+        try:
+            return str(int(s))
+        except:
+            return None
+    return s
     
 
 def log_attempt(user_id, session_id, task_index, task, user_answer, time_taken, difficulty_before, difficulty_after):
@@ -37,6 +49,8 @@ def log_attempt(user_id, session_id, task_index, task, user_answer, time_taken, 
         writer = csv.DictWriter(f, fieldnames=fields)
         if not file_exists:
             writer.writeheader()
+        norm_user = normalize(user_answer, task["answer_type"])
+        norm_ans = normalize(task["answer"], task["answer_type"])
         writer.writerow({
             "timestamp": datetime.now().isoformat(),
             "user_id": user_id,
@@ -50,6 +64,6 @@ def log_attempt(user_id, session_id, task_index, task, user_answer, time_taken, 
             "question": task["question"],
             "answer": task["answer"],
             "user_answer": user_answer,
-            "is_correct": int(normalize(user_answer, task["answer_type"]) == normalize(task["answer"], task["answer_type"])),
+            "is_correct": int(norm_user is not None) and (norm_user == norm_ans),
             "time_taken": time_taken,
         })

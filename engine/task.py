@@ -541,6 +541,7 @@ def generate_multiplicative_progression(pat_difficulty):
     answer = seq[-1] * multiplier
     if answer > 100000:
         return generate_multiplicative_progression(pat_difficulty)
+    seq.append("?")
     seq_text = ", ".join(str(x) for x in seq)
 
     return {
@@ -558,8 +559,8 @@ def generate_arithmetic_progression(pat_difficulty):
     start = random.randint(-50, 50)
     seq = [start + i * step for i in range(length)]
     answer = seq[-1] + step
+    seq.append("?")
     seq_text = ", ".join(str(x) for x in seq)
-
     return {
         "task_id": f"PAT-AP-{pat_difficulty}-{length}-{step_max}",
         "skill": "pattern",
@@ -581,6 +582,7 @@ def generate_cycle_pattern(pat_difficulty):
         seq.append(cycle[i % cycle_len])
         
     answer = cycle[total_len % cycle_len]
+    seq.append("?")
     seq_text = ", ".join(str(x) for x in seq)
     return {
         "task_id": f"PAT-CP-{pat_difficulty}-{cycle_len}-{total_len}",
@@ -617,6 +619,7 @@ def generate_mixed_pattern(pat_difficulty):
         answer = current
         break
     seq.pop()
+    seq.append("?")
     seq_text = ", ".join(str(x) for x in seq)
     return {
         "task_id": f"PAT-MIXED-{pat_difficulty}-{op_len}-{seq_len}-{k_max}",
@@ -729,7 +732,7 @@ def generate_near_boundary_task(num_diff):
         "answer_type": "integer"
     }
 ###for diff in [3, 7, 12, 18, 20, 27, 33]: 
-###    q = generate_comparison(30) 
+###    q = generate_mixed_pattern(30) 
 ###    print(f"Difficulty: {q['difficulty']}") 
 ###    print(f"Question: {q['question']}") 
 ###    print(f"Answer: {q['answer']}\n")

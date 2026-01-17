@@ -5,14 +5,26 @@ from engine.difficulty import update_difficulty
 from engine.logger import log_attempt
 from engine.session_summary import log_session_summary
 def normalize(ans, answer_type):
+    s = str(ans).strip().lower()
+    if s == "":
+        return None
     if answer_type == "boolean":
-        return str(ans).strip().lower()
-    elif answer_type == "yesno":
-        mapping = {"yes": "yes", "y": "yes", "true": "yes",
-               "no": "no", "n": "no", "false": "no"}
-        return mapping.get(str(ans).lower(), str(ans).lower())
-    else:  
-        return str(ans).strip()
+        mapping = {
+            "true": "true", "t": "true", "1": "true",
+            "false": "false", "f": "false", "0": "false"
+        }
+        return mapping.get(s, s)
+    if answer_type == "yesno":
+        mapping = {"yes": "yes", "y": "yes", "true": "yes", "t": "yes", "1": "yes",
+            "no": "no", "n": "no", "false": "no", "f": "no", "0": "no"
+        }
+        return mapping.get(s, s)
+    if answer_type == "integer":
+        try:
+            return str(int(s))
+        except:
+            return None
+    return s
 
 def run_session(user_id, duration_seconds):
     session_id = str(uuid.uuid4())
@@ -32,9 +44,13 @@ def run_session(user_id, duration_seconds):
         start = time.time()
         print("Answer type is", task["answer_type"])
         user_answer = input("Your answer: ").strip()
+        if user_answer.strip() == "":
+            user_answer = "__EMPTY__"
         end = time.time()
         time_taken = end - start
-        correct = normalize(user_answer, task["answer_type"]) == normalize(task["answer"], task["answer_type"])
+        norm_user = normalize(user_answer, task["answer_type"])
+        norm_ans = normalize(task["answer"], task["answer_type"])
+        correct = (norm_user is not None) and (norm_user == norm_ans)
         if correct:
             total_correct += 1
         difficulty_after = update_difficulty(difficulty_before, correct)
