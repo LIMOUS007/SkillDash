@@ -55,6 +55,7 @@ def run_session(user_id, duration_seconds):
             total_correct += 1
         difficulty_after = update_difficulty(difficulty_before, correct)
         user_state["difficulty"] = difficulty_after
+        task_index += 1
         log_attempt(
             user_id=user_id,
             session_id = session_id,
@@ -65,7 +66,6 @@ def run_session(user_id, duration_seconds):
             difficulty_before = difficulty_before,
             difficulty_after = difficulty_after
         )
-        task_index += 1
         print("Correct:", correct)
         print("New difficulty:", user_state["difficulty"])
     log_session_summary(
