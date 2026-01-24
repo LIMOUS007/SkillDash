@@ -19,4 +19,5 @@ def update_difficulty_ml(difficulty_before, correct, time_taken, expected_time, 
     if (not correct) and p_correct > 0.7:
         delta -= 1
     difficulty_after = difficulty_before + delta
+    difficulty_after = max(0, difficulty_after)
     return difficulty_after, delta

@@ -44,8 +44,8 @@ def log_attempt(user_id, session_id, task_index, task, user_answer, time_taken, 
         "user_answer",
         "is_correct",
         "time_taken",
-        "p_correct",
-        "expected_time"
+        "expected_time",
+        "p_correct"
     ]
     file_exists = os.path.isfile(csv_file)
     with open(csv_file,"a", newline="") as f:
@@ -68,7 +68,7 @@ def log_attempt(user_id, session_id, task_index, task, user_answer, time_taken, 
             "question": task["question"],
             "answer": task["answer"],
             "user_answer": user_answer,
-            "is_correct": int(norm_user is not None) and (norm_user == norm_ans),
+            "is_correct": int((norm_user is not None) and (norm_user == norm_ans)),
             "time_taken": time_taken,
             "expected_time": expected_time,
             "p_correct": p_correct,
