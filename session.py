@@ -1,9 +1,10 @@
 import time
 import uuid
 from engine.task_picker import pick_task
-from engine.difficulty import update_difficulty
+from engine.difficulty import update_difficulty_ml
 from engine.logger import log_attempt
 from engine.session_summary import log_session_summary
+from engine.ml_models import load_models, predict 
 def normalize(ans, answer_type):
     s = str(ans).strip().lower()
     if s == "":
@@ -28,6 +29,7 @@ def normalize(ans, answer_type):
 
 def run_session(user_id, duration_seconds):
     session_id = str(uuid.uuid4())
+    correct_model, time_model, feature_cols = load_models()
     user_state = {
         "difficulty": 0
     }
@@ -40,6 +42,15 @@ def run_session(user_id, duration_seconds):
             break
         difficulty_before = user_state["difficulty"]
         task = pick_task({"difficulty": difficulty_before})
+        task_subfamily = task["task_id"].split("-")[1]
+        p_correct, expected_time = predict(
+            correct_model, time_model, feature_cols,
+            difficulty_before = difficulty_before,
+            skill = task["skill"],
+            task_subfamily= task_subfamily,
+            answer_type = task["answer_type"]
+        )
+        print(f"ML p_correct={p_correct:.3f} | expected_time={expected_time:.2f}s")
         print("\n", task["question"])
         start = time.time()
         print("Answer type is", task["answer_type"])
@@ -53,9 +64,14 @@ def run_session(user_id, duration_seconds):
         correct = (norm_user is not None) and (norm_user == norm_ans)
         if correct:
             total_correct += 1
-        difficulty_after = update_difficulty(difficulty_before, correct)
+        difficulty_after, delta = update_difficulty_ml(
+            difficulty_before=difficulty_before,
+            correct=correct,
+            time_taken=time_taken,
+            expected_time=expected_time,
+            p_correct=p_correct
+        )
         user_state["difficulty"] = difficulty_after
-        task_index += 1
         log_attempt(
             user_id=user_id,
             session_id = session_id,
@@ -66,8 +82,10 @@ def run_session(user_id, duration_seconds):
             difficulty_before = difficulty_before,
             difficulty_after = difficulty_after
         )
+        task_index += 1
         print("Correct:", correct)
         print("New difficulty:", user_state["difficulty"])
+        print("Delta: ", delta)
     log_session_summary(
             user_id = user_id,
             session_id = session_id,
