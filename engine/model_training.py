@@ -46,9 +46,12 @@ pred_time = time_model.predict(x_test)
 mae = mean_absolute_error(y_test_t, pred_time)
 baseline = np.full_like(y_test_t, y_train_t.mean(), dtype=float)
 rmse = np.sqrt(mean_squared_error(y_test_t, pred_time))
-print(x.head(50))
-print(x.info())
-print(x.describe())
+with open("correct_model.pkl", "wb") as f:
+    pickle.dump(model, f)
+with open("time_model.pkl", "wb") as f:
+    pickle.dump(time_model, f)
+with open("feature_cols.pkl", "wb") as f:
+    pickle.dump(feature_cols, f)
 print("Accuracy:", accuracy_score(y_test, pred))
 print(classification_report(y_test, pred, zero_division=0))
 print("Prob range", probs.min(), probs.max())
@@ -59,12 +62,6 @@ print("RMSE:", rmse)
 print("Pred time range:", pred_time.min(), pred_time.max())
 print(df["time_taken"].describe())
 print(df["time_taken"].head(20).tolist())
-with open("correct_model.pkl", "wb") as f:
-    pickle.dump(model, f)
-with open("time_model.pkl", "wb") as f:
-    pickle.dump(time_model, f)
-with open("feature_cols.pkl", "wb") as f:
-    pickle.dump(feature_cols, f)
 print("Saved: correct_model.pkl, time_model.pkl, feature_cols.pkl")
     
     

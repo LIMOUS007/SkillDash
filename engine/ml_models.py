@@ -28,6 +28,3 @@ def predict(correct_model, time_model, feature_cols, difficulty_before, skill, t
     p_correct = correct_model.predict_proba(x)[0, 1]
     expected_time = float(time_model.predict(x)[0])
     return p_correct, expected_time
-    
-    
-    
