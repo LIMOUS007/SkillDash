@@ -16,7 +16,6 @@ SKILLS = {
     "numerical": [
         generate_mental_division,
         generate_ratio_scaling,
-        generate_inverse_ratio_scaling,
         generate_square_task,
         generate_near_boundary_task
     ],

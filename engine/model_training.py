@@ -5,9 +5,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, classification_report, mean_absolute_error, mean_squared_error
 from sklearn.linear_model import Ridge
-df1 = pd.read_csv("data_log1.csv")
-df2 = pd.read_csv("data_log.csv")
-df = pd.concat([df1, df2], ignore_index=True)
+df = pd.read_csv("data_log_new.csv")
 cols = [ 
     "difficulty_before",
     "skill",
@@ -31,6 +29,9 @@ x = df[[ "difficulty_before", "skill", "task_subfamily", "answer_type" ]]
 y_correct = df["is_correct"].astype(int)
 y_time = np.log1p(df["time_taken"].astype(float))
 x = pd.get_dummies(x, columns=["skill","answer_type","task_subfamily"], dtype=int)
+for col in x.columns:
+    if col.startswith("skill_"):
+        x[f"{col}_difficulty"] = x[col] * x["difficulty_before"]
 feature_cols = x.columns.tolist()
 print("Num features:", len(feature_cols))
 x_train, x_test, y_train, y_test = train_test_split(x, y_correct, random_state=42, test_size=0.2, stratify=y_correct)
@@ -43,9 +44,8 @@ probs = model.predict_proba(x_test)[:, 1]
 time_model = Ridge(alpha = 1.0)
 time_model.fit(x_train, y_train_t)
 pred_time = time_model.predict(x_test)
-mae = mean_absolute_error(y_test_t, pred_time)
-baseline = np.full_like(y_test_t, y_train_t.mean(), dtype=float)
-rmse = np.sqrt(mean_squared_error(y_test_t, pred_time))
+pred_time_real = np.expm1(pred_time)
+y_test_real = np.expm1(y_test_t)
 with open("correct_model.pkl", "wb") as f:
     pickle.dump(model, f)
 with open("time_model.pkl", "wb") as f:
@@ -56,13 +56,14 @@ print("Accuracy:", accuracy_score(y_test, pred))
 print(classification_report(y_test, pred, zero_division=0))
 print("Prob range", probs.min(), probs.max())
 print("Expected Time Model")
-print("MAE:", mae)
-print("Baseline MAE:", mean_absolute_error(y_test_t, baseline))
-print("RMSE:", rmse)
-print("Pred time range:", pred_time.min(), pred_time.max())
+print("Real-time MAE (seconds):", mean_absolute_error(y_test_real, pred_time_real))
+print("Real-time RMSE (seconds):", np.sqrt(mean_squared_error(y_test_real, pred_time_real)))
+print("Pred time range:", pred_time_real.min(), pred_time_real.max())
 print(df["time_taken"].describe())
 print(df["time_taken"].head(20).tolist())
 print("Saved: correct_model.pkl, time_model.pkl, feature_cols.pkl")
+coef = pd.Series(model.coef_[0], index=x.columns)
+print(coef.filter(like="difficulty").sort_values())
     
     
     
