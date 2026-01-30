@@ -110,3 +110,6 @@ def log_attempt(
             "expected_time": expected_time,
             "p_correct": p_correct,
         })
+        
+        
+

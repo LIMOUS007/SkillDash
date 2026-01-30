@@ -138,29 +138,29 @@ def ap_params_from_difficulty(pat_difficulty):
 
 def mp_params_from_difficulty(pat_difficulty):
     if pat_difficulty < 5:
-        length = 4
-        multipliers = [2]
-        start = random.randint(1, 5)
-    elif pat_difficulty < 10:
-        length = 5
+        length = random.choice([7, 8, 9])
         multipliers = [2]
         start = random.randint(1, 10)
+    elif pat_difficulty < 10:
+        length = random.choice([6, 7, 8])
+        multipliers = [2]
+        start = random.randint(1, 11)
     elif pat_difficulty < 15:
-        length = random.choice([5, 6])
+        length = random.choice([5, 6, 7])
         multipliers = [2, 3]
-        start = random.randint(1, 15)
+        start = random.randint(2, 12)
     elif pat_difficulty < 20:
-        length = 6
+        length = random.choice([4, 5, 6])
         multipliers = [2, 3]
-        start = random.randint(1, 20)
+        start = random.randint(3, 13)
     elif pat_difficulty < 25:
-        length = random.choice([6, 7])
-        multipliers = [2, 3, 4]
-        start = random.randint(1, 25)
+        length = random.choice([3, 4, 5])
+        multipliers = [3, 4]
+        start = random.randint(4, 14)
     else:
-        length = random.choice([7, 8, 9])
+        length = random.choice([3, 4])
         multipliers = [3, 4, 5]
-        start = random.randint(10, 30)
+        start = random.randint(5, 15)
     return length, multipliers, start
 
 def cycle_params_from_difficulty(pat_difficulty):
@@ -329,10 +329,24 @@ def near_boundary_param_from_difficulty(num_diff):
     return boundary, offset, ops
   
 def graph_depth(graph):
-    def dfs(node):
-        if not graph[node]:
+    memo = {}
+    def dfs(node, visiting=None):
+        if visiting is None:
+            visiting = set()
+        if node in memo:
+            return memo[node]
+        if node in visiting:
             return 1
-        return 1 + max(dfs(n) for n in graph[node])
+        visiting.add(node)
+        if not graph[node]:
+            result = 1
+        else:
+            result = 1 + max(dfs(n, visiting.copy()) for n in graph[node])
+        memo[node] = result
+        return result
+    
+    if not graph:
+        return 0
     return max(dfs(n) for n in list(graph.keys()))
 
 def shortest_path_length(graph, start, end):
@@ -373,15 +387,20 @@ def eval_boolean(expr, values):
 
 def build_boolean_expression(vars_list, ops_count, allow_not):
     expr = random.choice(vars_list)
+    not_count = 0
+    op_count = 0
     for i in range(ops_count):
         op = random.choice(["AND", "OR"])
         right = random.choice(vars_list)
         if allow_not and random.choice([True, False]):
             right = ("NOT", right)
+            not_count += 1
         expr = (op, expr, right)
+        op_count += 1
     if allow_not and random.choice([True, False]):
         expr = ("NOT", expr)
-    return expr
+        not_count += 1
+    return expr, op_count, not_count
 
 def render_boolean(expr):
     if isinstance(expr, str):
@@ -433,9 +452,19 @@ def has_path(graph, start, end):
                 visited.add(neighbor)
                 queue.append(neighbor)
     return False
-  
-def is_trivial_query(x, y, constraints):
-    return (x, y) in constraints or (y, x) in constraints
+
+def shortest_inference_depth(graph, base_true, target):
+    queue = deque([(v, 0) for v in base_true])
+    visited = set(base_true)
+    while queue:
+        node, depth = queue.popleft()
+        if node == target:
+            return depth
+        for nxt in graph[node]:
+            if nxt not in visited:
+                visited.add(nxt)
+                queue.append((nxt, depth + 1))
+    return None
 
 def generate_comparison(log_difficulty):
     while True:
@@ -519,7 +548,7 @@ def generate_boolean_evaluation(log_difficulty):
     vars_count, ops_count, allow_not = boolean_params_from_difficulty(log_difficulty)
     variables = list(string.ascii_uppercase[:vars_count])
     values = {v: random.choice([True, False]) for v in variables}
-    expr = build_boolean_expression(variables, ops_count, allow_not)
+    expr, op_count, not_count = build_boolean_expression(variables, ops_count, allow_not)
     result = eval_boolean(expr, values)
     lines = []
     for v in variables:
@@ -532,7 +561,10 @@ def generate_boolean_evaluation(log_difficulty):
         "difficulty": log_difficulty,
         "question": question_text,
         "answer": "True" if result else "False",
-        "answer_type": "boolean"
+        "answer_type": "boolean",
+        "boolean_var_count": vars_count,
+        "boolean_op_count": op_count,
+        "boolean_not_count": not_count
     }
  
 def generate_implication_chain(log_difficulty):
@@ -558,8 +590,7 @@ def generate_implication_chain(log_difficulty):
         if not candidates:
             continue
         query = random.choice(candidates)
-        if query not in inferred:
-            continue
+        chain_depth = shortest_inference_depth(graph, base_true, query)
         answer = "yes" if query in inferred else "no"
         lines = []
         for v in base_true:
@@ -575,7 +606,11 @@ def generate_implication_chain(log_difficulty):
         "difficulty": log_difficulty,
         "question": question_text,
         "answer": answer,
-        "answer_type": "yesno"
+        "answer_type": "yesno",
+        "imp_var_count": vars_count,
+        "imp_edge_count": edges,
+        "imp_base_true_count": len(base_true),
+        "imp_chain_depth": chain_depth
     }
    
 def generate_constraint_task(log_difficulty):
@@ -584,9 +619,10 @@ def generate_constraint_task(log_difficulty):
     relation, inverse = random.choice(REL_WORDS)
     graph = defaultdict(set)
     constraints = set()
-    
-    while len(constraints) < n_constraints:
+    attempts = 0
+    while len(constraints) < n_constraints and attempts < 500:
         a, b = random.sample(objects, 2)
+        attempts += 1
         if has_path(graph, a, b):
             continue
         if (a, b) in constraints:
@@ -595,37 +631,38 @@ def generate_constraint_task(log_difficulty):
             continue
         constraints.add((a, b))
         graph[a].add(b)
+    depth = graph_depth(graph)
+    target_answer = random.choice(["yes", "no"])
     query = None
     for _ in range(1000):
         x, y = random.sample(objects, 2)
         if x == y:
             continue
-        if not (has_path(graph, x, y) or has_path(graph, y, x)):
-            continue
-        if is_trivial_query(x, y, constraints):
-            continue
-        query = (x, y)
-        break
+        reachable = has_path(graph, x, y)
+        if target_answer == "yes" and reachable:
+            query = (x, y)
+            break
+        if target_answer == "no" and not reachable:
+            query = (x, y)
+            break
     if query is None:
-        for _ in range(1000):
-            x, y = random.sample(objects, 2)
-            if has_path(graph, x, y) or has_path(graph, y, x):
-                query = (x, y)
-                break
+        return generate_constraint_task(log_difficulty)
     x, y = query
     answer = "yes" if has_path(graph, x, y) else "no"
     lines = []
     for a, b in constraints:
         lines.append(f"{a} is {relation} {b}.")
     lines.append(f"Is {x} {relation} {y}?")
-    
     return {
         "task_id": f"LOG-CONSTRAINT-{log_difficulty}-{n_objects}-{n_constraints}",
         "skill": "logical",
         "difficulty": log_difficulty,
         "question": "\n".join(lines),
         "answer": answer,
-        "answer_type": "yesno"
+        "answer_type": "yesno",
+        "constraint_objects": n_objects,
+        "constraint_count": n_constraints,
+        "constraint_depth": depth
     }
 
 def generate_multiplicative_progression(pat_difficulty):
@@ -644,25 +681,38 @@ def generate_multiplicative_progression(pat_difficulty):
         "difficulty": pat_difficulty,
         "question": seq_text,
         "answer": answer,
-        "answer_type": "integer"
+        "answer_type": "integer",
+        "mp_multiplier": multiplier,
+        "mp_length": length
     }
 
 def generate_arithmetic_progression(pat_difficulty):
-    length, step_max = ap_params_from_difficulty(pat_difficulty)
-    step = random.choice([i for i in range(-step_max, step_max + 1) if i != 0])
-    start = random.randint(-50, 50)
-    seq = [start + i * step for i in range(length)]
-    answer = seq[-1] + step
-    seq.append("?")
-    seq_text = ", ".join(str(x) for x in seq)
-    return {
-        "task_id": f"PAT-AP-{pat_difficulty}-{length}-{step_max}",
-        "skill": "pattern",
-        "difficulty": pat_difficulty,
-        "question": seq_text,
-        "answer": answer,
-        "answer_type": "integer"
-    }
+    while True:
+        length, step_max = ap_params_from_difficulty(pat_difficulty)
+        step = random.choice([i for i in range(-step_max, step_max + 1) if i != 0])
+        if pat_difficulty >= 15 and abs(step) <= 2:
+            continue
+        if pat_difficulty < 10:
+            start = random.randint(0, 50)
+        else:
+            start = random.randint(-50, 50)
+        if pat_difficulty >= 15 and start % step == 0:
+            continue
+        seq = [start + i * step for i in range(length)]
+        answer = seq[-1] + step
+        seq.append("?")
+        seq_text = ", ".join(str(x) for x in seq)
+        return {
+            "task_id": f"PAT-AP-{pat_difficulty}-{length}-{step_max}",
+            "skill": "pattern",
+            "difficulty": pat_difficulty,
+            "question": seq_text,
+            "answer": answer,
+            "answer_type": "integer",
+            "ap_length": length,
+            "ap_step": step,
+            "ap_abs_step": abs(step)
+        }
  
 def generate_cycle_pattern(pat_difficulty):
     cycle_len, total_len = cycle_params_from_difficulty(pat_difficulty)
@@ -671,11 +721,15 @@ def generate_cycle_pattern(pat_difficulty):
         if is_arithmetic(cycle) or is_multiplicative(cycle):
             continue
         break
+    if pat_difficulty >= 18:
+        offset = random.randint(1, cycle_len-1)
+    else: 
+        offset = 0
     seq = []
     for i in range(total_len):
-        seq.append(cycle[i % cycle_len])
+        seq.append(cycle[(offset + i) % cycle_len])
         
-    answer = cycle[total_len % cycle_len]
+    answer = cycle[(offset + total_len) % cycle_len]
     seq.append("?")
     seq_text = ", ".join(str(x) for x in seq)
     return {
@@ -684,7 +738,10 @@ def generate_cycle_pattern(pat_difficulty):
         "difficulty": pat_difficulty,
         "question": seq_text,
         "answer": answer,
-        "answer_type": "integer"
+        "answer_type": "integer",
+        "cycle_len": cycle_len,
+        "cycle_offset": offset,
+        "cycle_total_len": total_len
     }
 
 def generate_mixed_pattern(pat_difficulty):
@@ -702,8 +759,10 @@ def generate_mixed_pattern(pat_difficulty):
             if op == "+":
                 current += k
             elif op == "*":
+                if op == "*" and k >= 5 and pat_difficulty < 25:
+                    continue
                 current *= k
-            if current <= 0 or current > 100000:
+            if current <= 0 or current > 10000:
                 break
             seq.append(current)
         if len(seq) < seq_len:
@@ -721,7 +780,9 @@ def generate_mixed_pattern(pat_difficulty):
         "difficulty": pat_difficulty,
         "question": seq_text,
         "answer": answer,
-        "answer_type": "integer"
+        "answer_type": "integer",
+        "mixed_op_len": op_len,
+        "mixed_seq_len": seq_len
     }
     
 def generate_mental_division(num_diff):
@@ -729,15 +790,8 @@ def generate_mental_division(num_diff):
     base = random.choice(spec["base_divisors"])
     answer = random.randint(*spec["answer_range"])
     steps = spec["simplify_steps"]
-    if steps == 1:
-        divisor = base * 10
-        dividend = divisor * answer
-    elif steps == 2:
-        divisor = base * 10
-        dividend = divisor * answer 
-    else:
-        divisor = base * 10
-        dividend = divisor * answer
+    divisor = base * 10
+    dividend = divisor * answer
     question = f"What is {dividend} divided by {divisor}?"
     return {
         "task_id": f"NUM-DIV-{num_diff}",
@@ -863,7 +917,7 @@ def generate_near_boundary_task(num_diff):
     
     
 for diff in [3, 5, 7, 10, 12, 15, 18, 20, 25, 27, 30, 33]: 
-    q = generate_comparison(diff) 
+    q = generate_mixed_pattern(diff) 
     print(f"Difficulty: {q['difficulty']}") 
     print(f"Question: {q['question']}") 
     print(f"Answer: {q['answer']}\n")

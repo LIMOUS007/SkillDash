@@ -22,7 +22,7 @@ df_sorted = df_view.sort_values(
     by=["skill", "task_subfamily", "difficulty_before"],
     ascending=[True, True, True]
 )
-squares = df_sorted[df_sorted["task_subfamily"] == "COMP"]
+squares = df_sorted[df_sorted["task_subfamily"] == "MIXED"]
 
 for _, row in squares.iterrows():
     print("Difficulty:", row["difficulty_before"])

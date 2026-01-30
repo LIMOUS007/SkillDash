@@ -5,7 +5,6 @@ from engine.task import generate_comparison
 from engine.task import generate_constraint_task
 from engine.task import generate_cycle_pattern
 from engine.task import generate_implication_chain
-from engine.task import generate_inverse_ratio_scaling
 from engine.task import generate_mental_division
 from engine.task import generate_mixed_pattern
 from engine.task import generate_multiplicative_progression
