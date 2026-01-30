@@ -2,6 +2,7 @@ import csv
 import time 
 from datetime import datetime
 import os
+import pandas as pd
 
 def normalize(ans, answer_type):
     s = str(ans).strip().lower()
@@ -112,4 +113,39 @@ def log_attempt(
         })
         
         
+        
+ML_COLUMNS = [
+    "task_id", "skill", "difficulty",
+    "question", "answer", "answer_type",
+    "comparison_objects", "comparison_edges",
+    "comparison_depth", "query_distance", "noise_edges",
+    "boolean_var_count", "boolean_op_count", "boolean_not_count",
+    "imp_var_count", "imp_edge_count",
+    "imp_base_true_count", "imp_chain_depth",
+    "constraint_objects", "constraint_count", "constraint_depth",
+    "ap_length", "ap_step", "ap_abs_step",
+    "mp_multiplier", "mp_length",
+    "cycle_len", "cycle_offset", "cycle_total_len",
+    "mixed_op_len", "mixed_seq_len",
+    "division_base", "division_steps",
+    "ratio_k", "ratio_mode",
+    "square_base", "square_offset", "square_mode",
+    "near_boundary_anchor", "near_boundary_op", "crossed_boundary"
+]
 
+def normalize_task(task):
+    return {col: task.get(col, None) for col in ML_COLUMNS}
+
+
+def log_task_feature(task):
+    row = normalize_task(task)
+    df = pd.DataFrame([row], columns=ML_COLUMNS)
+
+    df.to_csv(
+        "task_feature_ml.csv",
+        mode="a",
+        header=not os.path.exists("task_feature_ml.csv"),
+        index=False
+    )
+
+        

@@ -187,19 +187,19 @@ def cycle_params_from_difficulty(pat_difficulty):
 def mixed_params_from_difficulty(pat_difficulty):
     if pat_difficulty < 5:
         op_len = 2
-        seq_len = random.randint(4, 5)
+        seq_len = random.randint(5, 6)
         k_max = 3
     elif pat_difficulty < 10:
         op_len = 2
-        seq_len = random.randint(5, 6)
+        seq_len = random.randint(6, 7)
         k_max = 5
     elif pat_difficulty < 15:
         op_len = random.choice([2, 3])
-        seq_len = random.randint(6, 7)
+        seq_len = random.randint(7, 8)
         k_max = 6
     elif pat_difficulty < 20:
         op_len = random.choice([2, 3])
-        seq_len = random.randint(7, 8)
+        seq_len = random.randint(8, 9)
         k_max = 8
     elif pat_difficulty < 25:
         op_len = random.choice([2, 4])
@@ -207,7 +207,7 @@ def mixed_params_from_difficulty(pat_difficulty):
         k_max = 10
     else:
         op_len = random.choice([3, 4])
-        seq_len = random.randint(10, 15)
+        seq_len = random.randint(10, 13)
         k_max = 12
     return op_len, seq_len, k_max
 

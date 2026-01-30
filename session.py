@@ -5,6 +5,7 @@ from engine.task_picker import pick_task
 from engine.difficulty import update_difficulty_ml
 from engine.logger import log_attempt
 from engine.session_summary import log_session_summary
+from engine.logger import log_task_feature
 from engine.ml_models import load_models, predict 
 def normalize(ans, answer_type):
     s = str(ans).strip().lower()
@@ -46,6 +47,7 @@ def run_session(user_id, duration_seconds):
         skill = random.choice(["numerical", "logical", "pattern"])
         difficulty_before = user_state[skill]
         task = pick_task({"skill": skill, "difficulty": difficulty_before})
+        log_task_feature(task)
         task_subfamily = task["task_id"].split("-")[1]
         p_correct, expected_time = predict(
             correct_model, time_model, feature_cols,
