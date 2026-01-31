@@ -647,6 +647,12 @@ def generate_constraint_task(log_difficulty):
             break
     if query is None:
         return generate_constraint_task(log_difficulty)
+    if log_difficulty >= 10:
+        if (x, y) in constraints or (y, x) in constraints:
+            return generate_constraint_task(log_difficulty)
+    if log_difficulty >= 15:
+        if shortest_path_length(graph, x, y) is not None and shortest_path_length(graph, x, y) < 2:
+            return generate_constraint_task(log_difficulty)
     x, y = query
     answer = "yes" if has_path(graph, x, y) else "no"
     lines = []
@@ -690,7 +696,7 @@ def generate_arithmetic_progression(pat_difficulty):
     while True:
         length, step_max = ap_params_from_difficulty(pat_difficulty)
         step = random.choice([i for i in range(-step_max, step_max + 1) if i != 0])
-        if pat_difficulty >= 15 and abs(step) <= 2:
+        if pat_difficulty >= 5 and abs(step) <= 2:
             continue
         if pat_difficulty < 10:
             start = random.randint(0, 50)
@@ -916,8 +922,8 @@ def generate_near_boundary_task(num_diff):
     }
     
     
-###for diff in [3, 5, 7, 10, 12, 15, 18, 20, 25, 27, 30, 33]: 
-    q = generate_mixed_pattern(diff) 
+for diff in [3, 5, 7, 10, 12, 15, 18, 20, 25, 27, 30, 33]: 
+    q = generate_constraint_task(diff) 
     print(f"Difficulty: {q['difficulty']}") 
     print(f"Question: {q['question']}") 
     print(f"Answer: {q['answer']}\n")
