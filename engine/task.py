@@ -144,23 +144,23 @@ def mp_params_from_difficulty(pat_difficulty):
     elif pat_difficulty < 10:
         length = random.choice([6, 7, 8])
         multipliers = [2]
-        start = random.randint(1, 11)
+        start = random.randint(3, 14)
     elif pat_difficulty < 15:
         length = random.choice([5, 6, 7])
         multipliers = [2, 3]
-        start = random.randint(2, 12)
+        start = random.randint(5, 15)
     elif pat_difficulty < 20:
         length = random.choice([4, 5, 6])
         multipliers = [2, 3]
-        start = random.randint(3, 13)
+        start = random.randint(7, 17)
     elif pat_difficulty < 25:
         length = random.choice([3, 4, 5])
         multipliers = [3, 4]
-        start = random.randint(4, 14)
+        start = random.randint(10, 20)
     else:
         length = random.choice([3, 4])
         multipliers = [3, 4, 5]
-        start = random.randint(5, 15)
+        start = random.randint(10, 25)
     return length, multipliers, start
 
 def cycle_params_from_difficulty(pat_difficulty):
@@ -922,7 +922,7 @@ def generate_near_boundary_task(num_diff):
     }
     
     
-for diff in [3, 5, 7, 10, 12, 15, 18, 20, 25, 27, 30, 33]: 
+###for diff in [3, 5, 7, 10, 12, 15, 18, 20, 25, 27, 30, 33]: 
     q = generate_constraint_task(diff) 
     print(f"Difficulty: {q['difficulty']}") 
     print(f"Question: {q['question']}") 
