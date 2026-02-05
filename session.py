@@ -111,6 +111,7 @@ def run_session(user_id, duration_seconds):
         )
         task_index += 1
         print("Correct:", correct)
+        print("\n\n")
     log_session_summary(
             user_id = user_id,
             session_id = session_id,

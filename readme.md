@@ -51,7 +51,7 @@ Every session automatically records:
 - Task-level structural features  
 
 New data can be committed after running sessions so models can be retrained over time.
-Commit new versions of data_log_final.csv and task_feature_ml.csv after running meaningful sessions.
+Commit new versions of `data_log_final.csv` and `task_feature_ml.csv` after running meaningful sessions.
 ---
 
 ## Future Work (V2): Task ML  
