@@ -2173,3 +2173,126 @@ B is False.
 C is False.
 D is False.
 What is: (NOT (((((B OR D) OR (NOT B)) AND D) AND (NOT B)) OR C))?",True,boolean,,,,,,4,5,3,,,,,,,,,,,,,,,,,,,,,,,,,,,
+NUM-NEARBOUNDARY-0,numerical,0,What is 9 + 3?,12,integer,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,10,+,True
+LOG-COMP-0-4,logical,0,"A is heavier than B.
+ D is heavier than B.
+ A is heavier than C.
+ Is C heavier than B?",no,yesno,4,3,2,,0,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+PAT-AP-0-4-5,pattern,0,"7, 4, 1, -2, ?",-5,integer,,,,,,,,,,,,,,,,4,-3,3,,,,,,,,,,,,,,,,,
+PAT-AP-2-4-5,pattern,2,"8, 3, -2, -7, ?",-12,integer,,,,,,,,,,,,,,,,4,-5,5,,,,,,,,,,,,,,,,,
+PAT-CP-4-2-4,pattern,4,"7, 7, 7, 7, ?",7,integer,,,,,,,,,,,,,,,,,,,,,2,0,4,,,,,,,,,,,,
+NUM-DIV-3,numerical,3,What is 400 divided by 40?,10,integer,,,,,,,,,,,,,,,,,,,,,,,,,,4,1,,,,,,,,
+PAT-CP-7-3-6,pattern,7,"7, 13, 10, 7, 13, 10, ?",7,integer,,,,,,,,,,,,,,,,,,,,,3,0,6,,,,,,,,,,,,
+NUM-SQUARE-6,numerical,6,What is 14^2?,196,integer,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,15,1,near,,,
+PAT-AP-9-5-7,pattern,9,"28, 31, 34, 37, 40, ?",43,integer,,,,,,,,,,,,,,,,5,3,3,,,,,,,,,,,,,,,,,
+PAT-CP-11-3-7,pattern,11,"17, 9, 2, 17, 9, 2, 17, ?",9,integer,,,,,,,,,,,,,,,,,,,,,3,0,7,,,,,,,,,,,,
+PAT-AP-14-6-10,pattern,14,"10, 15, 20, 25, 30, 35, ?",40,integer,,,,,,,,,,,,,,,,6,5,5,,,,,,,,,,,,,,,,,
+NUM-DIV-5,numerical,5,What is 160 divided by 80?,2,integer,,,,,,,,,,,,,,,,,,,,,,,,,,8,1,,,,,,,,
+NUM-SQUARE-7,numerical,7,What is 7^2?,49,integer,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,8,1,near,,,
+LOG-CONSTRAINT-4-3-2,logical,4,"A is left of B.
+C is left of A.
+Is C left of B?",yes,yesno,,,,,,,,,,,,,3,2,3,,,,,,,,,,,,,,,,,,,,
+PAT-MIXED-17-3-9-8,pattern,17,"9, 12, 36, 43, 46, 138, 145, 148, ?",444,integer,,,,,,,,,,,,,,,,,,,,,,,,3,9,,,,,,,,,,
+LOG-COMP-3-4,logical,3,"A is older than B.
+ B is older than D.
+ A is older than D.
+ Is C older than A?",no,yesno,4,3,3,,0,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+PAT-MP-19-4-2,pattern,19,"8, 16, 32, 64, ?",128,integer,,,,,,,,,,,,,,,,,,,2,4,,,,,,,,,,,,,,,
+PAT-MP-22-3-3,pattern,22,"14, 42, 126, ?",378,integer,,,,,,,,,,,,,,,,,,,3,3,,,,,,,,,,,,,,,
+PAT-MIXED-24-2-10-10,pattern,24,"4, 11, 44, 51, 204, 211, 844, 851, 3404, ?",3411,integer,,,,,,,,,,,,,,,,,,,,,,,,2,10,,,,,,,,,,
+LOG-IMP-5-4-3,logical,5,"B is True.
+If B is True, then C is True.
+If D is True, then B is True.
+If A is True, then C is True.
+Is C True?",yes,yesno,,,,,,,,,4,3,1,1,,,,,,,,,,,,,,,,,,,,,,,
+PAT-MP-27-3-3,pattern,27,"25, 75, 225, ?",675,integer,,,,,,,,,,,,,,,,,,,3,3,,,,,,,,,,,,,,,
+LOG-IMP-7-4-3,logical,7,"D is True.
+C is True.
+If D is True, then C is True.
+If A is True, then D is True.
+If C is True, then A is True.
+Is A True?",yes,yesno,,,,,,,,,4,3,2,1,,,,,,,,,,,,,,,,,,,,,,,
+NUM-SQUARE-11,numerical,11,What is 9^2?,81,integer,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,10,1,near,,,
+NUM-SQUARE-15,numerical,15,What is 25^2?,625,integer,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,23,2,near,,,
+LOG-IMP-9-4-3,logical,9,"D is True.
+If A is True, then C is True.
+If B is True, then D is True.
+If A is True, then B is True.
+Is C True?",no,yesno,,,,,,,,,4,3,1,,,,,,,,,,,,,,,,,,,,,,,,
+NUM-DIV-19,numerical,19,What is 1080 divided by 120?,9,integer,,,,,,,,,,,,,,,,,,,,,,,,,,12,2,,,,,,,,
+PAT-CP-30-8-16,pattern,30,"20, 20, 3, 12, 8, 15, 8, 17, 20, 20, 3, 12, 8, 15, 8, 17, ?",20,integer,,,,,,,,,,,,,,,,,,,,,8,1,16,,,,,,,,,,,,
+PAT-MIXED-32-3-10-12,pattern,32,"11, 18, 25, 50, 57, 64, 128, 135, 142, ?",284,integer,,,,,,,,,,,,,,,,,,,,,,,,3,10,,,,,,,,,,
+PAT-MIXED-35-4-13-12,pattern,35,"3, 10, 15, 24, 34, 41, 46, 55, 65, 72, 77, 86, ?",96,integer,,,,,,,,,,,,,,,,,,,,,,,,4,13,,,,,,,,,,
+LOG-BOOL-10-3-2,logical,10,"A is False.
+B is True.
+C is False.
+What is: (NOT ((A OR B) OR B))?",False,boolean,,,,,,3,2,1,,,,,,,,,,,,,,,,,,,,,,,,,,,
+PAT-MP-38-3-4,pattern,38,"24, 96, 384, ?",1536,integer,,,,,,,,,,,,,,,,,,,4,3,,,,,,,,,,,,,,,
+NUM-SQUARE-21,numerical,21,What is 31^2?,961,integer,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,30,1,decompose,,,
+NUM-SQUARE-23,numerical,23,What is 36^2?,1296,integer,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,37,1,decompose,,,
+PAT-CP-41-7-13,pattern,41,"19, 11, 4, 3, 4, 13, 4, 19, 11, 4, 3, 4, 13, ?",4,integer,,,,,,,,,,,,,,,,,,,,,7,2,13,,,,,,,,,,,,
+PAT-MP-44-4-4,pattern,44,"20, 80, 320, 1280, ?",5120,integer,,,,,,,,,,,,,,,,,,,4,4,,,,,,,,,,,,,,,
+LOG-BOOL-11-3-2,logical,11,"A is False.
+B is False.
+C is True.
+What is: (NOT ((B AND B) OR B))?",True,boolean,,,,,,3,2,1,,,,,,,,,,,,,,,,,,,,,,,,,,,
+PAT-MP-47-4-4,pattern,47,"15, 60, 240, 960, ?",3840,integer,,,,,,,,,,,,,,,,,,,4,4,,,,,,,,,,,,,,,
+LOG-BOOL-13-3-2,logical,13,"A is True.
+B is True.
+C is False.
+What is: (NOT ((B OR C) OR B))?",False,boolean,,,,,,3,2,1,,,,,,,,,,,,,,,,,,,,,,,,,,,
+LOG-COMP-15-7,logical,15,"D is heavier than A.
+ B is heavier than E.
+ A is heavier than E.
+ F is heavier than D.
+ B is heavier than C.
+ D is heavier than G.
+ C is heavier than D.
+ F is heavier than C.
+ Is E heavier than D?",no,yesno,7,8,5,,2,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+NUM-RATIO-DIV-25,numerical,25,"85 -> 17, 55 -> ?",11,integer,,,,,,,,,,,,,,,,,,,,,,,,,,,,5,divide,,,,,,
+NUM-DIV-28,numerical,28,What is 3600 divided by 200?,18,integer,,,,,,,,,,,,,,,,,,,,,,,,,,20,3,,,,,,,,
+PAT-MIXED-51-4-10-12,pattern,51,"3, 14, 112, 336, 346, 357, 2856, 8568, 8578, ?",8589,integer,,,,,,,,,,,,,,,,,,,,,,,,4,10,,,,,,,,,,
+LOG-IMP-18-5-4,logical,18,"B is True.
+E is True.
+If E is True, then B is True.
+If E is True, then D is True.
+If A is True, then E is True.
+If B is True, then D is True.
+Is D True?",yes,yesno,,,,,,,,,5,4,2,1,,,,,,,,,,,,,,,,,,,,,,,
+PAT-AP-54-12-30,pattern,54,"43, 20, -3, -26, -49, -72, -95, -118, -141, -164, -187, -210, ?",-233,integer,,,,,,,,,,,,,,,,12,-23,23,,,,,,,,,,,,,,,,,
+PAT-CP-0-2-4,pattern,0,"3, 19, 3, 19, ?",3,integer,,,,,,,,,,,,,,,,,,,,,2,0,4,,,,,,,,,,,,
+LOG-IMP-0-3-2,logical,0,"C is True.
+If C is True, then A is True.
+If B is True, then A is True.
+Is B True?",no,yesno,,,,,,,,,3,2,1,,,,,,,,,,,,,,,,,,,,,,,,
+LOG-IMP-3-3-2,logical,3,"A is True.
+If A is True, then B is True.
+If B is True, then A is True.
+Is B True?",yes,yesno,,,,,,,,,3,2,1,1,,,,,,,,,,,,,,,,,,,,,,,
+NUM-DIV-0,numerical,0,What is 80 divided by 40?,2,integer,,,,,,,,,,,,,,,,,,,,,,,,,,4,1,,,,,,,,
+LOG-IMP-6-4-3,logical,6,"D is True.
+If A is True, then D is True.
+If B is True, then A is True.
+If A is True, then C is True.
+Is B True?",no,yesno,,,,,,,,,4,3,1,,,,,,,,,,,,,,,,,,,,,,,,
+LOG-IMP-9-4-3,logical,9,"B is True.
+If B is True, then C is True.
+If C is True, then A is True.
+If C is True, then B is True.
+Is A True?",yes,yesno,,,,,,,,,4,3,1,2,,,,,,,,,,,,,,,,,,,,,,,
+NUM-SQUARE-3,numerical,3,What is 3^2?,9,integer,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,3,0,exact,,,
+PAT-MIXED-3-2-6-3,pattern,3,"5, 15, 17, 51, 53, ?",159,integer,,,,,,,,,,,,,,,,,,,,,,,,2,6,,,,,,,,,,
+LOG-BOOL-11-3-2,logical,11,"A is True.
+B is False.
+C is False.
+What is: (NOT ((A OR A) AND C))?",True,boolean,,,,,,3,2,1,,,,,,,,,,,,,,,,,,,,,,,,,,,
+LOG-BOOL-14-3-2,logical,14,"A is True.
+B is True.
+C is False.
+What is: ((B AND (NOT A)) OR (NOT C))?",True,boolean,,,,,,3,2,2,,,,,,,,,,,,,,,,,,,,,,,,,,,
+NUM-SQUARE-7,numerical,7,What is 7^2?,49,integer,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,7,0,near,,,
+NUM-SQUARE-11,numerical,11,What is 9^2?,81,integer,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,10,1,near,,,
+NUM-NEARBOUNDARY-15,numerical,15,What is 509 + 22?,531,integer,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,500,+,False
+NUM-NEARBOUNDARY-16,numerical,16,What is 203 + 29?,232,integer,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,200,+,False
+NUM-RATIO-DIV-18,numerical,18,"66 -> 11, 84 -> ?",14,integer,,,,,,,,,,,,,,,,,,,,,,,,,,,,6,divide,,,,,,

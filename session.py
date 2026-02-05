@@ -56,7 +56,7 @@ def run_session(user_id, duration_seconds):
             task_subfamily= task_subfamily,
             answer_type = task["answer_type"]
         )
-        print("Current difficulty is", user_state[skill])
+        print(f"Current {skill} difficulty is", user_state[skill])
         print(task["question"])
         start = time.time()
         print("Answer type is", task["answer_type"])
@@ -77,12 +77,12 @@ def run_session(user_id, duration_seconds):
             expected_time=expected_time,
             p_correct=p_correct
         )
-        user_state[skill] = difficulty_after
         difficulty_snapshot_before = {
             "numerical": user_state["numerical"],
             "logical": user_state["logical"],
             "pattern": user_state["pattern"]
         }
+        user_state[skill] = difficulty_after
         difficulty_snapshot_after = {
             "numerical": user_state["numerical"],
             "logical": user_state["logical"],
@@ -111,10 +111,6 @@ def run_session(user_id, duration_seconds):
         )
         task_index += 1
         print("Correct:", correct)
-        print(f"New {skill} difficulty:", user_state[skill])
-        print("Delta: ", delta)
-        print("time take: ", time_taken)
-        print(f"ML p_correct={p_correct:.3f} | expected_time={expected_time:.2f}s""\n")
     log_session_summary(
             user_id = user_id,
             session_id = session_id,
