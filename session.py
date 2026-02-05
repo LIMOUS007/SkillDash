@@ -111,7 +111,8 @@ def run_session(user_id, duration_seconds):
         )
         task_index += 1
         print("Correct:", correct)
-        print("\n\n")
+        print("\n")
+        
     log_session_summary(
             user_id = user_id,
             session_id = session_id,
@@ -120,6 +121,8 @@ def run_session(user_id, duration_seconds):
             start_time_iso = time.strftime("%Y-%m-%dT%H:%M:%S", time.localtime(session_start)),
             end_time_iso = time.strftime("%Y-%m-%dT%H:%M:%S", time.localtime(time.time()))
         )
+    print("Total questions: ", task_index)
+    print("Total correct questions: ", total_correct)
         
 if __name__ == "__main__":
     run_session(user_id="LIMOUS", duration_seconds = 300)
