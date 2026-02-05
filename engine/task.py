@@ -920,10 +920,3 @@ def generate_near_boundary_task(num_diff):
         "near_boundary_op": op,
         "crossed_boundary": crossed
     }
-    
-    
-###for diff in [3, 5, 7, 10, 12, 15, 18, 20, 25, 27, 30, 33]: 
-    q = generate_constraint_task(diff) 
-    print(f"Difficulty: {q['difficulty']}") 
-    print(f"Question: {q['question']}") 
-    print(f"Answer: {q['answer']}\n")

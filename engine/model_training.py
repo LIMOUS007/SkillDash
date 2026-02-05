@@ -5,7 +5,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, classification_report, mean_absolute_error, mean_squared_error
 from sklearn.linear_model import Ridge
-df = pd.read_csv("data_log_new.csv")
+df = pd.read_csv("data_log_final.csv")
 cols = [ 
     "difficulty_before",
     "skill",

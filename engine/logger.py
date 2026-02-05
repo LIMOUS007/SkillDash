@@ -49,7 +49,7 @@ def log_attempt(
     expected_time,
     p_correct
     ):
-    csv_file = os.path.join(os.getcwd(), "data_log_new.csv")
+    csv_file = os.path.join(os.getcwd(), "data_log_final.csv")
     fields = [
         "timestamp",
         "user_id",
